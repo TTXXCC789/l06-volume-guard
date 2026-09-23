@@ -1,0 +1,11 @@
+*.apk
+*.aab
+*.jks
+*.keystore
+*.p12
+*.idsig
+*.log
+build/
+.DS_Store
+
+*-check

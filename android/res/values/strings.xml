@@ -1,0 +1,3 @@
+<resources>
+    <string name="l06_accessibility_desc">仅在 L06 蓝牙音频连接后设置媒体音量，不读取屏幕内容。</string>
+</resources>
