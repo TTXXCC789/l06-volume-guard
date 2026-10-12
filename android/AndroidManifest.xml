@@ -1,9 +1,29 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.codex.l06volume">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.codex.l06volume" android:versionCode="7" android:versionName="1.6">
     <uses-sdk android:minSdkVersion="33" android:targetSdkVersion="34" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+
+    <queries><package android:name="moe.shizuku.privileged.api" /></queries>
 
     <application android:label="L06 音量守护" android:allowBackup="false" android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        <meta-data android:name="moe.shizuku.client.V3_SUPPORT" android:value="true" />
+        <provider android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="com.codex.l06volume.shizuku" android:multiprocess="false"
+            android:enabled="true" android:exported="true"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -15,6 +35,19 @@
                 <action android:name="android.bluetooth.a2dp.profile.action.CONNECTION_STATE_CHANGED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".StartupReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".VolumeGuardService" android:exported="false"
+            android:stopWithTask="false" android:foregroundServiceType="connectedDevice" />
+        <service android:name=".OfflineStartupService" android:exported="false"
+            android:stopWithTask="false" android:foregroundServiceType="specialUse">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="User-initiated on-device wireless debugging preparation on an existing personal hotspot, requested window 120 seconds" />
+        </service>
         <service android:name=".L06VolumeAccessibilityService"
             android:exported="true"
             android:label="L06 音量守护"
